@@ -53,13 +53,13 @@ if __name__ == '__main__':
 
     parser.add_argument("inputfile", type=argparse.FileType('r'), help="Archivo a leer")
     parser.add_argument("-s", "--size",         type=int, help="Medida del cuadrado que rodea cada ícono, by default is the gcd of the SVGs with and height")
-    parser.add_argument("-c", "--color",        type=Color, default="000000", help="Color para exportar los íconos")
-    parser.add_argument("-b", "--basecolor",    type=Color, default="000000", help="Color actual para cada ícono")
-    parser.add_argument("-d", "--defaultname",  type=str,   default="image",  help="Nombre por defecto para los archivos de imagen")
+    parser.add_argument("-c", "--color",        type=Color, default="000000", help="New color for the icons")
+    parser.add_argument("-b", "--basecolor",    type=Color, default="000000", help="Current color of the icons")
+    parser.add_argument("-d", "--defaultname",  type=str,   default="image",  help="Default name for exported images")
     parser.add_argument("-o", "--output",       type=str,   default="./",     help="Output folder (won't be created, should exist previously)")
-    parser.add_argument("-e", "--exportsize",   type=int,   action='append',  help="Tamaños a los cuales exportar los íconos")
+    parser.add_argument("-e", "--exportsize",   type=int,   action='append',  help="Sizes to wich export the icons")
     parser.add_argument("-f", "--files",        action="store_true",          help="Create only files instead of folders (the size is part of the filename)")
-    parser.add_argument("-n", "--namesfile",    type=argparse.FileType('r'),  help="Archivo de nombres de los íconos, asignados de arriba a abajo y de izquierda a derecha")
+    parser.add_argument("-n", "--namesfile",    type=argparse.FileType('r'),  help="Names file for the icons, a normal txt file with a name per line, assigned from top to bottom and from left to right")
 
     args = parser.parse_args()
 
