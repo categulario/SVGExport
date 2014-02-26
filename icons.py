@@ -118,15 +118,17 @@ if __name__ == '__main__':
 
     namesgenerator = names(namesfile)
 
-    if not os.path.isdir('build') and not args.files:
-        os.mkdir('build')
+    build_dir = os.path.join(args.output, 'build')
+    if not os.path.isdir(build_dir) and not args.files:
+        os.mkdir(build_dir)
 
     for i in range(0, filewidth/size):
         for j in range(fileheight/size-1, -1, -1):
             curname = namesgenerator.next()
             for s in sizes:
-                if not os.path.isdir('build/'+str(s)) and not args.files:
-                    os.mkdir('build/'+str(s))
+                size_dir = os.path.join(args.output, 'build', str(s))
+                if not os.path.isdir(size_dir) and not args.files:
+                    os.mkdir(size_dir)
 
                 if args.files:
                     output = os.path.join(args.output, curname+'_'+str(s)+'.png')
