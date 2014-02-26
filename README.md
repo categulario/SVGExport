@@ -1,8 +1,12 @@
 SVGExport
 =========
 
-Scripts for exporting SVG to png files
+Scripts for exporting SVG icon files to png files, can change the color and export to multiple sizes
 
-## build
+## get help
 
-`python setup.py py2exe`
+`python icons.py -h`
+
+## run
+
+`python icons.py file.svg`
