@@ -1,4 +1,5 @@
 *.py[co]
+*.sublime-*
 
 # C extensions
 *.so
