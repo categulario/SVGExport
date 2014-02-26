@@ -52,12 +52,14 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Compila un archivo de iconos SVG en múltiples imágenes")
 
     parser.add_argument("inputfile", type=argparse.FileType('r'), help="Archivo a leer")
-    parser.add_argument("-s", "--size", type=int, help="Medida del cuadrado que rodea cada ícono")
-    parser.add_argument("-c", "--color", type=Color, help="Color para exportar los íconos", default="000000")
-    parser.add_argument("-b", "--basecolor", type=Color, help="Color actual para cada ícono", default="000000")
-    parser.add_argument("-n", "--namesfile", type=argparse.FileType('r'), help="Archivo de nombres de los íconos, asignados de arriba a abajo y de izquierda a derecha")
-    parser.add_argument("-d", "--defaultname", type=str, help="Nombre por defecto para los archivos de imagen", default="image")
-    parser.add_argument("-e", "--exportsize", type=int, help="Tamaños a los cuales exportar los íconos", action='append')
+    parser.add_argument("-s", "--size",         type=int, help="Medida del cuadrado que rodea cada ícono, by default is the gcd of the SVGs with and height")
+    parser.add_argument("-c", "--color",        type=Color, default="000000", help="Color para exportar los íconos")
+    parser.add_argument("-b", "--basecolor",    type=Color, default="000000", help="Color actual para cada ícono")
+    parser.add_argument("-d", "--defaultname",  type=str,   default="image",  help="Nombre por defecto para los archivos de imagen")
+    parser.add_argument("-o", "--output",       type=str,   default="./",     help="Output folder (won't be created, should exist previously)")
+    parser.add_argument("-e", "--exportsize",   type=int,   action='append',  help="Tamaños a los cuales exportar los íconos")
+    parser.add_argument("-f", "--files",        action="store_true",          help="Create only files instead of folders (the size is part of the filename)")
+    parser.add_argument("-n", "--namesfile",    type=argparse.FileType('r'),  help="Archivo de nombres de los íconos, asignados de arriba a abajo y de izquierda a derecha")
 
     args = parser.parse_args()
 
@@ -116,20 +118,26 @@ if __name__ == '__main__':
 
     namesgenerator = names(namesfile)
 
-    if not os.path.isdir('build'):
+    if not os.path.isdir('build') and not args.files:
         os.mkdir('build')
 
     for i in range(0, filewidth/size):
         for j in range(fileheight/size-1, -1, -1):
             curname = namesgenerator.next()
             for s in sizes:
-                if not os.path.isdir('build/'+str(s)):
+                if not os.path.isdir('build/'+str(s)) and not args.files:
                     os.mkdir('build/'+str(s))
+
+                if args.files:
+                    output = os.path.join(args.output, curname+'_'+str(s)+'.png')
+                else:
+                    output = os.path.join(args.output, 'build', str(s), curname+'.png')
+
                 subprocess.check_call(
                     [
                         'inkscape',
 
-                        '-e', os.path.join('build', str(s), curname+'.png'),
+                        '-e', output,
 
                         '-w', str(s),
                         '-h', str(s),
