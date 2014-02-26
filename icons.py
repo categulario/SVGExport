@@ -51,7 +51,7 @@ class Color:
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Compila un archivo de iconos SVG en múltiples imágenes")
 
-    parser.add_argument("inputfile", type=argparse.FileType('r'), help="Archivo a leer")
+    parser.add_argument("inputfile", type=argparse.FileType('r'), help="SVG file")
     parser.add_argument("-s", "--size",         type=int, help="Medida del cuadrado que rodea cada ícono, by default is the gcd of the SVGs with and height")
     parser.add_argument("-c", "--color",        type=Color, default="000000", help="New color for the icons")
     parser.add_argument("-b", "--basecolor",    type=Color, default="000000", help="Current color of the icons")

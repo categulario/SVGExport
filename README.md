@@ -1,4 +1,4 @@
 SVGExport
 =========
 
-Scripts for exporting SVG to png files
+Export SVG icon files to png.
