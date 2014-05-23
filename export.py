@@ -45,7 +45,7 @@ if __name__ == '__main__':
     try:
         tree = ET.parse(inputfile)
     except ET.ParseError:
-        print '%sEl archivo no es un XML válido o reconocible'%R
+        print ('%sEl archivo no es un XML válido o reconocible'%R)
         exit(1)
     root = tree.getroot()
 

@@ -69,7 +69,7 @@ if __name__ == '__main__':
     try:
         tree = ET.parse(inputfile)
     except ET.ParseError:
-        print('%sEl archivo no es un XML válido o reconocible'%R)
+        print '%sEl archivo no es un XML válido o reconocible'%R
         exit(1)
     root = tree.getroot()
 
@@ -124,7 +124,7 @@ if __name__ == '__main__':
 
     for i in range(0, filewidth/size):
         for j in range(fileheight/size-1, -1, -1):
-            curname = next(namesgenerator)
+            curname = namesgenerator.next()
             for s in sizes:
                 size_dir = os.path.join(args.output, 'build', str(s))
                 if not os.path.isdir(size_dir) and not args.files:
