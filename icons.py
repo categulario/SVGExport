@@ -64,7 +64,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     inputfile =  args.inputfile
-    secondinputfile = file(inputfile.name, 'r') # the buffer
+    secondinputfile = open(inputfile.name, 'r') # the buffer
 
     try:
         tree = ET.parse(inputfile)
@@ -122,8 +122,8 @@ if __name__ == '__main__':
     if not os.path.isdir(build_dir) and not args.files:
         os.mkdir(build_dir)
 
-    for i in range(0, filewidth/size):
-        for j in range(fileheight/size-1, -1, -1):
+    for i in range(0, filewidth//size):
+        for j in range(fileheight//size-1, -1, -1):
             curname = next(namesgenerator)
             for s in sizes:
                 size_dir = os.path.join(args.output, 'build', str(s))
