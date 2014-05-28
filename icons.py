@@ -139,11 +139,14 @@ if __name__ == '__main__':
                     [
                         'inkscape',
 
+                        # output filename
                         '-e', output,
 
+                        # width and height of the image
                         '-w', str(s),
                         '-h', str(s),
 
+                        # area (if crop needed)
                         '-a',
                         '%d:%d:%d:%d'%(
                             i*size,
