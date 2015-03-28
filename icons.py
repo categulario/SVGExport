@@ -1,11 +1,11 @@
 #!/usr/bin/env python
-# -*- coding:utf-8 -*-
 import argparse
 import subprocess
 import os
 import xml.etree.ElementTree as ET
 import re
 from uuid import uuid1
+from fractions import Fraction
 
 #console colors
 W  = '\033[0m'  # white (normal)
@@ -49,15 +49,18 @@ class Color:
         return '#'+self.base_string
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description="Compila un archivo de iconos SVG en múltiples imágenes")
+    parser = argparse.ArgumentParser(description="""
+Compila un archivo SVG de iconos SVG en múltiples imágenes (una imagen por
+ícono) Permite cambiar el color o ajustar el tamaño de salida""")
 
-    parser.add_argument("inputfile", type=argparse.FileType('r'), help="SVG file")
-    parser.add_argument("-s", "--size",         type=int, help="Medida del cuadrado que rodea cada ícono, by default is the gcd of the SVGs with and height")
+    parser.add_argument("inputfile",            type=argparse.FileType('r'), help="SVG file")
+    parser.add_argument("-w", "--width",        type=int,  help="Ancho del ícono dentro del vector")
+    parser.add_argument("-t", "--height",       type=int,  help="Alto del ícono dentro del vector")
     parser.add_argument("-c", "--color",        type=Color, default="000000", help="New color for the icons")
     parser.add_argument("-b", "--basecolor",    type=Color, default="000000", help="Current color of the icons")
     parser.add_argument("-d", "--defaultname",  type=str,   default="image",  help="Default name for exported images")
     parser.add_argument("-o", "--output",       type=str,   default="./",     help="Output folder (won't be created, should exist previously)")
-    parser.add_argument("-e", "--exportsize",   type=int,   action='append',  help="Sizes to wich export the icons")
+    parser.add_argument("-e", "--exportwidth",  type=int,   action='append',  help="Widths to wich export the icons")
     parser.add_argument("-f", "--files",        action="store_true",          help="Create only files instead of folders (the size is part of the filename)")
     parser.add_argument("-n", "--namesfile",    type=argparse.FileType('r'),  help="Names file for the icons, a normal txt file with a name per line, assigned from top to bottom and from left to right")
 
@@ -76,12 +79,13 @@ if __name__ == '__main__':
     filewidth = int(root.attrib['width'])
     fileheight = int(root.attrib['height'])
 
-    if args.size:
-        size = args.size
+    if args.width and args.height:
+        width, height = args.width, args.height
     else:
-        size = mcd(filewidth, fileheight)
+        width = height = mcd(filewidth, fileheight)
+    ratio = Fraction(width, height)
 
-    sizes = args.exportsize or [size]
+    sizes = args.exportwidth or [width]
 
     color = args.color
     basecolor = args.basecolor
@@ -122,18 +126,18 @@ if __name__ == '__main__':
     if not os.path.isdir(build_dir) and not args.files:
         os.mkdir(build_dir)
 
-    for i in range(0, filewidth//size):
-        for j in range(fileheight//size-1, -1, -1):
+    for i in range(0, filewidth//width):
+        for j in range(fileheight//height-1, -1, -1):
             curname = next(namesgenerator)
-            for s in sizes:
-                size_dir = os.path.join(args.output, 'build', str(s))
+            for export_width in sizes:
+                size_dir = os.path.join(args.output, 'build', str(export_width))
                 if not os.path.isdir(size_dir) and not args.files:
                     os.mkdir(size_dir)
 
                 if args.files:
-                    output = os.path.join(args.output, curname+'_'+str(s)+'.png')
+                    output = os.path.join(args.output, curname+'_'+str(export_width)+'.png')
                 else:
-                    output = os.path.join(args.output, 'build', str(s), curname+'.png')
+                    output = os.path.join(args.output, 'build', str(export_width), curname+'.png')
 
                 subprocess.check_call(
                     [
@@ -143,16 +147,16 @@ if __name__ == '__main__':
                         '-e', output,
 
                         # width and height of the image
-                        '-w', str(s),
-                        '-h', str(s),
+                        '-w', str(export_width),
+                        '-h', str(int(export_width/ratio)),
 
                         # area (if crop needed)
                         '-a',
                         '%d:%d:%d:%d'%(
-                            i*size,
-                            j*size,
-                            (i+1)*size,
-                            (j+1)*size,
+                            i*width,
+                            j*height,
+                            (i+1)*width,
+                            (j+1)*height,
                         ),
 
                         tmpfilename
