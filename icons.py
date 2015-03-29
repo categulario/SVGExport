@@ -59,7 +59,7 @@ Compila un archivo SVG de iconos SVG en múltiples imágenes (una imagen por
     parser.add_argument("-c", "--color",        type=Color, default="000000", help="New color for the icons")
     parser.add_argument("-b", "--basecolor",    type=Color, default="000000", help="Current color of the icons")
     parser.add_argument("-d", "--defaultname",  type=str,   default="image",  help="Default name for exported images")
-    parser.add_argument("-o", "--output",       type=str,   default="./",     help="Output folder (won't be created, should exist previously)")
+    parser.add_argument("-o", "--output",       type=str,   default="build",     help="Output folder (won't be created, should exist previously)")
     parser.add_argument("-e", "--exportwidth",  type=int,   action='append',  help="Widths to wich export the icons")
     parser.add_argument("-f", "--files",        action="store_true",          help="Create only files instead of folders (the size is part of the filename)")
     parser.add_argument("-n", "--namesfile",    type=argparse.FileType('r'),  help="Names file for the icons, a normal txt file with a name per line, assigned from top to bottom and from left to right")
@@ -122,7 +122,7 @@ Compila un archivo SVG de iconos SVG en múltiples imágenes (una imagen por
 
     namesgenerator = names(namesfile)
 
-    build_dir = os.path.join(args.output, 'build')
+    build_dir = os.path.join(args.output)
     if not os.path.isdir(build_dir) and not args.files:
         os.mkdir(build_dir)
 
@@ -130,14 +130,14 @@ Compila un archivo SVG de iconos SVG en múltiples imágenes (una imagen por
         for j in range(fileheight//height-1, -1, -1):
             curname = next(namesgenerator)
             for export_width in sizes:
-                size_dir = os.path.join(args.output, 'build', str(export_width))
+                size_dir = os.path.join(args.output, str(export_width))
                 if not os.path.isdir(size_dir) and not args.files:
                     os.mkdir(size_dir)
 
                 if args.files:
                     output = os.path.join(args.output, curname+'_'+str(export_width)+'.png')
                 else:
-                    output = os.path.join(args.output, 'build', str(export_width), curname+'.png')
+                    output = os.path.join(args.output, str(export_width), curname+'.png')
 
                 subprocess.check_call(
                     [
