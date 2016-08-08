@@ -63,6 +63,7 @@ Compila un archivo SVG de iconos SVG en múltiples imágenes (una imagen por
     parser.add_argument("-e", "--exportwidth",  type=int,   action='append',  help="Widths to wich export the icons")
     parser.add_argument("-f", "--files",        action="store_true",          help="Create only files instead of folders (the size is part of the filename)")
     parser.add_argument("-n", "--namesfile",    type=argparse.FileType('r'),  help="Names file for the icons, a normal txt file with a name per line, assigned from top to bottom and from left to right")
+    parser.add_argument("-s", "--start",        type=int,  help="Default number to start when used with -d", default='1')
 
     args = parser.parse_args()
 
@@ -105,7 +106,7 @@ Compila un archivo SVG de iconos SVG en múltiples imágenes (una imagen por
     namesfile = args.namesfile
 
     def names(nf):
-        incremental = 1
+        incremental = args.start
         while True:
             if nf:
                 nextname = nf.readline()
